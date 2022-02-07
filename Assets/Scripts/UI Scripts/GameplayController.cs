@@ -1,10 +1,14 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System.IO;
+using System;
 
 public class GameplayController : MonoBehaviour
 {
     public int enemyChecker;
+
+    private string filePath;
 
     [Header("Player position")]
     [SerializeField] private Transform player;
@@ -14,10 +18,12 @@ public class GameplayController : MonoBehaviour
 
     void Start()
     {
+        CreateFile();
+
         enemyChecker = 0;
         Time.timeScale = 1f;
 
-        Debug.Log("Start Game");
+        WriteToLogFile($"Start Game {DateTime.Now}");
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -26,26 +32,31 @@ public class GameplayController : MonoBehaviour
     void Update()
     {
         //do work only this test
-        if(player.position.y < 0.97f && player.position.y > 0.47)
+        if (player.position.y < 0.97f && player.position.y > 0.47)
         {
             player.position = new Vector3(player.position.x, player.position.y - 0.5f, player.position.z);
             loseText.gameObject.SetActive(true);
-            Debug.Log("You lose");
+            WriteToLogFile($"You lose {DateTime.Now}\n");
             Time.timeScale = 0f;
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.Confined;
         }
-        if(player.position.z > 36 && enemyChecker == 4)
+        if (player.position.z > 36 && enemyChecker == 4)
         {
             winText.gameObject.SetActive(true);
-            Debug.Log("You win");
+            WriteToLogFile($"You win {DateTime.Now}\n");
             Time.timeScale = 0f;
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.Confined;
             ++enemyChecker;
         }
-        if(player.position.y > 1)
+        if (player.position.y > 1)
             player.transform.position = new Vector3(player.position.x, 1f, player.position.z);
+    }
+
+    private void CreateFile()
+    {
+        filePath = Application.dataPath + "/LogCannonAdventure.txt";
     }
 
     public void ExitGame()
@@ -57,4 +68,15 @@ public class GameplayController : MonoBehaviour
     {
         SceneManager.LoadScene(0);
     }
+
+    public void WriteToLogFile(string message)
+    {
+        using (StreamWriter logFile = new StreamWriter(filePath, true))
+        {
+            logFile.WriteLine(message);
+        }
+    }
 }
+ 
+    
+

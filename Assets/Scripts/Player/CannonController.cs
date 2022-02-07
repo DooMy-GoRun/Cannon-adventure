@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class CannonController : MonoBehaviour
 {
+    public GameplayController log;
+
     [Header("Player rigidbody")]
     [SerializeField] private Rigidbody body;
 
@@ -41,8 +43,7 @@ public class CannonController : MonoBehaviour
     {
         if (Time.timeScale == 1)
         {
-            Debug.Log("Shoot");
-
+            log.WriteToLogFile("Shoot");
 
             //Instantiate(FireFX, startPointCannon.position + Vector3.forward, Quaternion.identity);
 

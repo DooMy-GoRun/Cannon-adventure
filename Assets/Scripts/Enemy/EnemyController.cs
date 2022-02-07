@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
-    public GameplayController enemyToFinish;
+    public GameplayController log;
 
     [Header("Enemy basic position")]
     [SerializeField] Transform enemyTransform;
@@ -113,12 +113,13 @@ public class EnemyController : MonoBehaviour
     {
         if(collision.gameObject.tag == "Bullet")
         {
+            log.WriteToLogFile("The projectile hit the enemy");
             numberOfDeath--;
 
             if (numberOfDeath <= 0)
             {
-                ++enemyToFinish.enemyChecker;
-                Debug.Log($"Enemy{enemyToFinish.enemyChecker} is dead");
+                ++log.enemyChecker;
+                log.WriteToLogFile($"Enemy{log.enemyChecker} is dead");
                 Destroy(gameObject);
             }
         }

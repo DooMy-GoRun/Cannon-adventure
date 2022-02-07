@@ -2,17 +2,20 @@ using UnityEngine;
 
 public class PlayerBullet : MonoBehaviour
 {
+    private GameObject playerBoom;
+
+    private void Start()
+    {
+        playerBoom = Resources.Load<GameObject>("PlayerHitFX");
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
-        if(collision.gameObject.tag == "Enemy")
+        if (collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "Untagged" || collision.gameObject.tag == "Bullet" || collision.gameObject.tag == "BulletEnemy")
         {
-            Debug.Log("The projectile hit the enemy");
+            GameObject booms = Instantiate(playerBoom, gameObject.transform.position, Quaternion.identity);
             Destroy(gameObject);
-        }
-
-        if(collision.gameObject.tag == "Untagged" || collision.gameObject.tag == "Bullet" || collision.gameObject.tag == "BulletEnemy")
-        {
-            Destroy(gameObject);
+            Destroy(booms, 1.5f);
         }
     }
 }
